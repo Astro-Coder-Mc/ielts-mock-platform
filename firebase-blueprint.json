@@ -1,0 +1,56 @@
+{
+  "entities": {
+    "Exam": {
+      "title": "Exam",
+      "description": "IELTS or CEFR practice exam",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["IELTS", "CEFR"] },
+        "skill": { "type": "string", "enum": ["Listening", "Reading", "Writing", "Speaking"] },
+        "title": { "type": "string" },
+        "duration": { "type": "integer" },
+        "sections": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "authorId": { "type": "string" }
+      },
+      "required": ["id", "type", "skill", "title", "duration", "sections"]
+    },
+    "Article": {
+      "title": "Article",
+      "description": "Article for reading and shadowing",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "category": { "type": "string" },
+        "difficulty": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "content"]
+    }
+  },
+  "firestore": {
+    "/exams/{examId}": {
+      "schema": "Exam",
+      "description": "Main exams collection"
+    },
+    "/articles/{articleId}": {
+      "schema": "Article",
+      "description": "Articles for reading/shadowing"
+    },
+    "/users/{userId}": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "username": { "type": "string" },
+          "phone": { "type": "string" },
+          "coins": { "type": "integer" },
+          "isAdmin": { "type": "boolean" }
+        }
+      },
+      "description": "User profiles"
+    }
+  }
+}

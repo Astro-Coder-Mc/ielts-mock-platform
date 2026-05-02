@@ -1,0 +1,6 @@
+{
+  "name": "IELTS Master AI",
+  "description": "Premium IELTS Mock platform with real-time feedback, authentic practice tests, and Telegram-integrated authentication.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": []
+}

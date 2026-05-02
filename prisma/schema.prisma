@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  role          Role      @default(STUDENT)
+  points        Int       @default(0)
+  coins         Int       @default(0)
+  region        String?
+  age           Int?
+  gender        String?
+  targetScore   Float?
+  examType      ExamType  @default(IELTS)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions      TestSession[]
+  achievements  UserAchievement[]
+  transactions  CoinTransaction[]
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+enum ExamType {
+  IELTS
+  CEFR
+}
+
+model CoinTransaction {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  amount    Int      // Positive for purchases, negative for usage
+  type      String   // e.g., "PURCHASE", "TEST_ATTEMPT"
+  createdAt DateTime @default(now())
+}
+
+model TestSession {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  score       Int      @default(0)
+  cheatCount  Int      @default(0)
+  status      TestStatus @default(IN_PROGRESS)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  answers     Answer[]
+  result      Result?
+}
+
+model Result {
+  id            String   @id @default(uuid())
+  sessionId     String   @unique
+  session       TestSession @relation(fields: [sessionId], references: [id])
+  bandScore     Float
+  grammar       String?
+  vocabulary    String?
+  coherence     String?
+  improvements  String[]
+  createdAt     DateTime @default(now())
+}
+
+enum TestStatus {
+  IN_PROGRESS
+  COMPLETED
+  TERMINATED
+}
+
+model Question {
+  id          String   @id @default(uuid())
+  type        QuestionType
+  content     String
+  difficulty  Int      @default(1) // 1 to 5 for adaptive testing
+  correctAns  String
+  explanation String?  // AI Feedback explanation
+  createdAt   DateTime @default(now())
+
+  answers     Answer[]
+}
+
+enum QuestionType {
+  READING
+  LISTENING
+  SPEAKING
+  WRITING
+}
+
+model Answer {
+  id            String   @id @default(uuid())
+  sessionId     String
+  session       TestSession @relation(fields: [sessionId], references: [id])
+  questionId    String
+  question      Question @relation(fields: [questionId], references: [id])
+  userAnswer    String
+  isCorrect     Boolean
+  aiFeedback    String?
+  createdAt     DateTime @default(now())
+}
+
+model Achievement {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  badgeUrl    String?
+  points      Int
+
+  users       UserAchievement[]
+}
+
+model UserAchievement {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id])
+  unlockedAt    DateTime @default(now())
+
+  @@unique([userId, achievementId])
+}

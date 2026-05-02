@@ -60,8 +60,8 @@ export default function App() {
           <Route path="study-tools" element={<StudyToolsLayout />}>
             <Route index element={<Navigate to="articles" replace />} />
             <Route path="articles" element={<PlaceholderPage title="Articles" />} />
-            <Route path="shadowing" element={<PlaceholderPage title="Shadowing" />} />
-            <Route path="typing" element={<PlaceholderPage title="Typing Tutor" />} />
+            <Route path="shadowing" element={<PracticeSection title="Shadowing" />} />
+            <Route path="typing" element={<PracticeSection title="Typing" />} />
             <Route path="writing-samples" element={<PlaceholderPage title="Writing Samples" />} />
             <Route path="live-chat" element={<PlaceholderPage title="Live Chat" />} />
           </Route>

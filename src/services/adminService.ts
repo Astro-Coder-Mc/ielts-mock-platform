@@ -4,7 +4,9 @@ import { ExamData } from "../types/exam";
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
 export async function parseExamFromImage(base64Image: string, skill: string): Promise<ExamData> {
-  const prompt = `Analyze this IELTS ${skill} practice test image/PDF and extract all questions into a valid JSON format.
+  const prompt = `Analyze this ${skill} practice material image/PDF and extract the content into a valid JSON format.
+  If it's an IELTS test (Reading, Listening, Writing, Speaking), use the ExamData structure.
+  If it's Shadowing or Typing, extract the article/text content.
   The output MUST strictly follow the ExamData interface:
   {
     "id": "generated_id",
@@ -15,14 +17,14 @@ export async function parseExamFromImage(base64Image: string, skill: string): Pr
     "sections": [
       {
         "id": "s1",
-        "title": "Section Title",
-        "content": "Reading text content if applicable",
-        "audioUrl": "Leave empty",
+        "title": "Module Title",
+        "content": "Full text content for Reading/Shadowing/Typing",
+        "audioUrl": "Empty or identified audio link",
         "questions": [
           {
             "id": "q1",
-            "type": "multiple-choice | fill-blank | matching | dropdown",
-            "question": "The question text",
+            "type": "multiple-choice | fill-blank | matching | dropdown | writing",
+            "question": "Question text (optional for Shadowing/Typing)",
             "options": ["Option A", "Option B"],
             "correctAnswer": "Answer string"
           }
@@ -31,7 +33,7 @@ export async function parseExamFromImage(base64Image: string, skill: string): Pr
     ]
   }
   
-  Be extremely careful with question sequences and correct answers. If the image has 40 questions, extract all of them.`;
+  For Shadowing/Typing: Put the full text in the first section's "content" field. Leave questions empty if not applicable.`;
 
   const response = await genAI.models.generateContent({
     model: "gemini-3-flash-preview",

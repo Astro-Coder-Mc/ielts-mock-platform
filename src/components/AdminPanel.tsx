@@ -122,8 +122,8 @@ export default function AdminPanel() {
 
                 <div className="space-y-4">
                   <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 block px-1">Select Skill Stream</label>
-                  <div className="grid grid-cols-2 gap-4">
-                    {['Reading', 'Listening', 'Writing', 'Speaking'].map(s => (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {['Reading', 'Listening', 'Writing', 'Speaking', 'Shadowing', 'Typing'].map(s => (
                       <button
                         key={s}
                         onClick={() => setSkill(s as SkillType)}

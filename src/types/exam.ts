@@ -1,5 +1,5 @@
 export type ExamType = 'IELTS' | 'CEFR';
-export type SkillType = 'Listening' | 'Reading' | 'Writing' | 'Speaking';
+export type SkillType = 'Listening' | 'Reading' | 'Writing' | 'Speaking' | 'Shadowing' | 'Typing';
 
 export interface Question {
   id: string;
